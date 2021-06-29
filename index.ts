@@ -39,20 +39,36 @@ class Client {
 
     var target = url.parse(this.target, true)
 
-    /*
-    JENKINS_URL?job={job name}&action=buildWithParameters?key1=value1&key2=value2 to
-    JENKINS_URL/job/{job name}/buildWithParameters?key1=value1&key2=value2
-    */
-    const job = data.query["job"]
-    const action = data.query["action"]
-    if (job && action) {
+    const type = data.query["type"]
+    if (type) {
+      if (type === "build") {
 
-      const jenkinsTarget = `${this.target}job/${job}/${action}`
-      delete data.query["job"]
-      delete data.query["action"]
+        /*
+        JENKINS_URL?type=build&job={job name}&action=build to
+        JENKINS_URL/job/{job name}/build
 
-      console.log(jenkinsTarget)
-      target = url.parse(jenkinsTarget, true)
+        JENKINS_URL?type=build&job={job name}&action=buildWithParameters?key1=value1&key2=value2 to
+        JENKINS_URL/job/{job name}/buildWithParameters?key1=value1&key2=value2
+        */
+        const job = data.query["job"]
+        const action = data.query["action"]
+        if (job && action) {
+    
+          const jenkinsTarget = `${this.target}job/${job}/${action}`
+          delete data.query["job"]
+          delete data.query["action"]
+    
+          target = url.parse(jenkinsTarget, true)
+        }
+      } else if (type === "github-webhook") {
+
+        /*
+        JENKINS_URL?type=github-webhook to
+        JENKINS_URL/github-webhook/
+        */
+        const webhookTarget = `${this.target}github-webhook/`
+        target = url.parse(webhookTarget, true)
+      }
     }
 
     const mergedQuery = Object.assign(target.query, data.query)
