@@ -43,8 +43,7 @@ class Client {
     if (isWebhook) {
 
       /*
-      JENKINS_URL?type=github-webhook to
-      JENKINS_URL/github-webhook/
+      to JENKINS_URL/github-webhook/
       */
       const webhookTarget = `${this.target}github-webhook/`
       target = url.parse(webhookTarget, true)
@@ -52,10 +51,10 @@ class Client {
     } else {
 
       /*
-      JENKINS_URL?type=build&job={job name}&action=build to
+      JENKINS_URL?job={job name}&action=build to
       JENKINS_URL/job/{job name}/build
 
-      JENKINS_URL?type=build&job={job name}&action=buildWithParameters?key1=value1&key2=value2 to
+      JENKINS_URL?job={job name}&action=buildWithParameters?key1=value1&key2=value2 to
       JENKINS_URL/job/{job name}/buildWithParameters?key1=value1&key2=value2
       */
       const job = data.query["job"]
